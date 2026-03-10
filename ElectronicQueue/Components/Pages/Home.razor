@@ -1,0 +1,118 @@
+﻿@page "/"
+
+<div class="home-wrapper">
+    <section class="hero-card">
+        <div class="hero-content">
+            <h1>SmartQueue Pro</h1>
+            <p>Інтелектуальна система керування клієнтськими потоками</p>
+            <a href="terminal" class="start-btn">Розпочати роботу</a>
+        </div>
+    </section>
+
+    <section class="info-section">
+        <div class="info-text">
+            <h2>Чому обирають нашу чергу?</h2>
+            <p>Наш проект — це комплексне рішення на базі <strong>.NET 10 та Blazor</strong>, що забезпечує синхронізацію в реальному часі між терміналом, табло та оператором.</p>
+            <div class="benefits">
+                <span>✅ Zero Latency</span>
+                <span>✅ User Friendly</span>
+                <span>✅ Reliable Singleton</span>
+            </div>
+        </div>
+        <div class="info-image">🚀</div>
+    </section>
+
+    <h2 class="text-center">Основні модулі системи</h2>
+    <div class="modules-grid">
+        <div class="mod-card">
+            <div class="mod-icon blue">🎫</div>
+            <h4>Термінал</h4>
+            <p>Видача талонів клієнтам.</p>
+            <a href="terminal">Відкрити →</a>
+        </div>
+        <div class="mod-card">
+            <div class="mod-icon green">🔔</div>
+            <h4>Табло</h4>
+            <p>Візуалізація черги.</p>
+            <a href="board">Відкрити →</a>
+        </div>
+        <div class="mod-card">
+            <div class="mod-icon red">🎧</div>
+            <h4>Оператор</h4>
+            <p>Керування клієнтами.</p>
+            <a href="operator">Відкрити →</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .home-wrapper {
+        padding: 20px;
+        color: #333; /* Явно ставимо темний колір тексту для світлого фону */
+    }
+
+    .hero-card {
+        background: linear-gradient(135deg, #1a237e 0%, #4a148c 100%);
+        border-radius: 20px;
+        padding: 60px 40px;
+        color: white;
+        text-align: center;
+        margin-bottom: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .hero-content h1 { font-size: 3rem; font-weight: bold; margin: 0; }
+    .hero-content p { font-size: 1.2rem; opacity: 0.8; }
+
+    .start-btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 35px;
+        background: #ffc107;
+        color: #000 !important;
+        text-decoration: none;
+        border-radius: 50px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .info-section {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        margin-bottom: 40px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .info-text h2 { color: #1a237e; font-weight: bold; }
+    .benefits { display: flex; gap: 15px; margin-top: 15px; font-weight: 500; }
+
+    .info-image { font-size: 80px; flex-shrink: 0; }
+
+    .modules-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .mod-card {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: 0.3s;
+    }
+
+    .mod-card:hover { transform: translateY(-5px); }
+    .mod-icon { font-size: 40px; margin-bottom: 15px; }
+    
+    .mod-card h4 { color: #1a237e; font-weight: bold; }
+    .mod-card a { color: #1a237e; font-weight: 600; text-decoration: none; }
+
+    .text-center { text-align: center; color: #1a237e; font-weight: bold; margin-bottom: 20px; }
+</style>
