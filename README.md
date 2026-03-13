@@ -1,133 +1,94 @@
 ```mermaid
 classDiagram
 
-%% Модель
-class Client {
-    - int queueNumber
-    - DateTime registrationTime
-    - String serviceType
-    - String status
-    + Client(String serviceType)
-    + String getInfo()
-    + String getStatus()
-    + void setStatus(String status)
+%% 1. PATTERN: STRATEGY (Пріоритети обслуговування)
+class IQueueStrategy {
+    <<interface>>
+    + getNextTicket(List~Ticket~ tickets) Ticket
 }
-
-class Operator {
-    - int id
-    - String name
-    - boolean isBusy
-    + Client callNext(Queue queue)
-    + void startService(Client client)
-    + void finishService(Client client)
-    + boolean getStatus()
+class FIFOServiceStrategy {
+    + getNextTicket(List~Ticket~ tickets) Ticket
 }
-
-class Queue {
-    - List clients
-    + void addClient(Client client)
-    + Client getNext()
-    + void removeClient(Client client)
-    + int getCount()
-    + boolean isEmpty()
+class PriorityServiceStrategy {
+    + getNextTicket(List~Ticket~ tickets) Ticket
 }
+IQueueStrategy <|.. FIFOServiceStrategy
+IQueueStrategy <|.. PriorityServiceStrategy
 
+%% 2. PATTERN: STATE (Життєвий цикл талона і статистика)
+class ITicketState {
+    <<interface>>
+    + handleState(Ticket ticket)
+    + getStatusName() String
+}
+class WaitingState {
+    + handleState(Ticket ticket)
+    + getStatusName() String
+}
+class CalledState {
+    + handleState(Ticket ticket)
+    + getStatusName() String
+}
+class CompletedState {
+    + handleState(Ticket ticket)
+    + getStatusName() String
+}
+ITicketState <|.. WaitingState
+ITicketState <|.. CalledState
+ITicketState <|.. CompletedState
+
+%% Основна сутність: Талон
 class Ticket {
-    - static Ticket instance
-    - int lastNumber
-    + static Ticket getInstance()
-    + int generateNumber()
-    + void reset()
+    - int number
+    - DateTime issueTime
+    - DateTime callTime
+    - ITicketState state
+    - boolean isPriority
+    + Ticket(int number, boolean isPriority)
+    + void setState(ITicketState state)
+    + int calculateWaitTime()
 }
+Ticket *-- ITicketState : has state
 
-class Administrator {
-    - int id
-    - String name
-    + void addOperator(Operator operator)
-    + void removeOperator(Operator operator)
-    + String viewStatistics()
-    + void changeWorkMode(String mode)
+%% 3. PATTERN: OBSERVER (Табло)
+class IQueueObserver {
+    <<interface>>
+    + updateQueueBoard(Ticket currentTicket)
 }
-
-%% UI / View
-class ClientView {
-    + displayClientInfo(Client client)
-    + displayQueue(Queue queue)
-    + pressGetTicket()
-}
-
-class OperatorView {
-    + displayOperatorStatus(Operator operator)
-    + displayCurrentClient(Client client)
-    + pressCallNext()
-    + pressFinishService()
-}
-
-class AdminDashboard {
-    + showStatistics()
-    + manageOperators()
-    + viewQueueStatus()
-    + pressAddOperator()
-    + pressRemoveOperator()
-}
-
-class LoginForm {
-    + enterUsername()
-    + enterPassword()
-    + pressLogin()
-}
-
-class TicketScreen {
-    + showTicketNumber(int number)
-    + printTicket()
-}
-
-class QueueScreen {
-    + showQueueList()
-    + highlightCurrentClient()
-}
-
-%% Controller
-class QueueController {
-    + addClient(Client client)
-    + callNextClient()
-    + updateClientStatus(Client client, String status)
-}
-
-%% Observer
-class ObservableQueue {
-    - List observers
-    + attach(observer)
-    + detach(observer)
+class IQueueObservable {
+    <<interface>>
+    + attach(IQueueObserver observer)
+    + detach(IQueueObserver observer)
     + notifyObservers()
 }
 
-class QueueObserver {
-    + update(Queue queue)
+class Queue {
+    - List~Ticket~ tickets
+    - IQueueStrategy strategy
+    - List~IQueueObserver~ observers
+    + void setStrategy(IQueueStrategy strategy)
+    + void addTicket(Ticket ticket)
+    + Ticket callNext()
 }
+IQueueObservable <|.. Queue
+Queue o-- Ticket : contains
+Queue o-- IQueueStrategy : uses
+Queue o-- IQueueObserver : notifies
 
-%% Factory
-class ClientFactory {
-    + Client createClient(String serviceType)
+class QueueBoardDisplay {
+    + updateQueueBoard(Ticket currentTicket)
+    + playNotificationSound()
 }
+IQueueObserver <|.. QueueBoardDisplay
 
-%% Відносини
-Queue "1" o-- "*" Client : contains
-Operator --> Queue : works with
-Client --> Ticket : receives
-Administrator --> Operator : manages
-QueueController --> ObservableQueue : observes
-ClientView ..|> QueueObserver
-OperatorView ..|> QueueObserver
-ObservableQueue --> Queue : manages
-AdminDashboard --> Administrator : interacts
-ClientFactory --> Client : creates
-
-%% UI зв'язки
-ClientView --> QueueController : interacts
-OperatorView --> QueueController : interacts
-AdminDashboard --> QueueController : interacts
-LoginForm --> ClientView : opens
-TicketScreen --> ClientView : shows ticket
-QueueScreen --> ClientView : shows queue
-QueueScreen --> OperatorView : shows queue
+%% 4. PATTERN: SINGLETON (Єдина система логів / Історія)
+class HistoryLogger {
+    - static HistoryLogger instance
+    - List~String~ logHistory
+    - HistoryLogger()
+    + static HistoryLogger getInstance()
+    + void logEvent(String message)
+    + String generateWaitTimeStatistics()
+}
+Queue ..> HistoryLogger : logs events
+Ticket ..> HistoryLogger : logs state changes
