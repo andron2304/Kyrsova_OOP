@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="ElectronicQueue.csproj" />
+  <Project Path="ElectronicQueue.Tests/ElectronicQueue.Tests.csproj" />
+</Solution>
