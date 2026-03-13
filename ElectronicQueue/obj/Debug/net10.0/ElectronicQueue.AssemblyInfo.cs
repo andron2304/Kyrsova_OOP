@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ElectronicQueue")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+229ee3c51f110641122a8efccaedb1ab60aacff6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+88a27e2727bc836db57f46c3fbe657e6129c9b80")]
 [assembly: System.Reflection.AssemblyProductAttribute("ElectronicQueue")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ElectronicQueue")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
