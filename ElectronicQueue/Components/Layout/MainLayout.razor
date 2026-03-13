@@ -1,23 +1,23 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
-    <div class="sidebar">
+    <div class="sidebar shadow" style="background: #2c3e50; width: 280px;">
         <NavMenu />
     </div>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+        <div class="top-row px-4 border-bottom">
+            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">Документація</a>
         </div>
 
-        <article class="content px-4">
+        <article class="content px-4 py-3">
             @Body
         </article>
     </main>
 </div>
 
-<div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
-    <span class="dismiss">🗙</span>
-</div>
+<style>
+    /* Стиль для всієї сторінки, щоб фон був м'яким */
+    main { background-color: #f8f9fa; min-height: 100vh; }
+    .sidebar { min-height: 100vh; }
+</style>

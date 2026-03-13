@@ -1,35 +1,38 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿<div class="top-row ps-3 navbar navbar-dark bg-primary shadow">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">Електронна Черга</a>
+        <a class="navbar-brand fw-bold" href="">
+            <span class="bi bi-cpu-fill me-2"></span>SmartQueue Pro
+        </a>
     </div>
 </div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').checked = false">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill" aria-hidden="true"></span> Головна
+<div class="nav-scrollable">
+    <nav class="flex-column nav-pills p-3">
+        <div class="nav-item mb-2">
+            <NavLink class="nav-link rounded-3 text-white" href="" Match="NavLinkMatch.All">
+                <i class="bi bi-house-door me-2"></i> Головна
             </NavLink>
         </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="terminal">
-                <span class="bi bi-plus-square-fill" aria-hidden="true"></span> Термінал
+        <div class="nav-item mb-2">
+            <NavLink class="nav-link rounded-3 text-white" href="terminal">
+                <i class="bi bi-qr-code me-2"></i> Термінал (Client)
             </NavLink>
         </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="board">
-                <span class="bi bi-display-fill" aria-hidden="true"></span> Табло
+        <div class="nav-item mb-2">
+            <NavLink class="nav-link rounded-3 text-white" href="board">
+                <i class="bi bi-tv me-2"></i> Табло (Observer)
             </NavLink>
         </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="operator">
-                <span class="bi bi-person-badge-fill" aria-hidden="true"></span> Оператор
+        <div class="nav-item mb-2">
+            <NavLink class="nav-link rounded-3 text-white" href="operator">
+                <i class="bi bi-person-badge me-2"></i> Оператор
             </NavLink>
         </div>
     </nav>
 </div>
+
+<style>
+    .nav-link { transition: all 0.3s; opacity: 0.8; }
+    .nav-link:hover { background: rgba(255,255,255,0.1); opacity: 1; }
+    .nav-link.active { background: #ffc107 !important; color: #000 !important; font-weight: bold; }
+</style>
