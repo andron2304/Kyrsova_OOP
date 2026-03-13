@@ -1,28 +1,74 @@
 @page "/board"
 @using ElectronicQueue.Models
-@inject QueueSystem Queue
 @implements IQueueObserver
 @implements IDisposable
+@inject QueueSystem Queue
 
-<div class="container-fluid bg-dark text-white min-vh-100 p-5">
-    <h1 class="text-center mb-5 text-warning fw-bold display-3">ІНФОРМАЦІЙНЕ ТАБЛО</h1>
-    <div class="row">
-        <div class="col-md-12 text-center">
-            <div class="display-1 p-5 border border-warning rounded shadow">
-                @if (calledTicket != null) {
-                    <div class="animate__animated animate__flash">НОМЕР №@calledTicket.Number</div>
-                    <div class="h2 text-muted">Будь ласка, пройдіть до вікна</div>
-                } else {
-                    <div class="text-muted small">Очікуйте виклику...</div>
+<div class="container-fluid bg-dark text-white min-vh-100 p-4">
+    <div class="row h-100">
+        <div class="col-md-8 d-flex flex-column justify-content-center align-items-center border-end border-secondary">
+            <h1 class="display-1 fw-bold text-warning mb-0 animate__animated animate__pulse animate__infinite">
+                ІНФОРМАЦІЙНЕ ТАБЛО
+            </h1>
+            <hr class="w-75 border-secondary my-5">
+            
+            <div class="text-center p-5 rounded-5 shadow-lg bg-black border border-warning" style="min-width: 400px;">
+                <p class="h2 text-uppercase ls-wide mb-3 text-muted">Зараз викликається:</p>
+                <div class="display-1 fw-bold text-warning" style="font-size: 10rem;">
+                    #@(Queue.GetCurrentNumber() ?? 0)
+                </div>
+            </div>
+            <p class="mt-4 h4 text-muted">Будь ласка, підійдіть до вікна обслуговування</p>
+        </div>
+
+        <div class="col-md-4 p-4">
+            <h3 class="text-warning mb-4 fw-bold text-center border-bottom pb-2">Історія викликів</h3>
+            <div class="list-group list-group-flush">
+                @foreach (var ticket in Queue.GetHistory())
+                {
+                    <div class="list-group-item bg-transparent text-white border-secondary mb-3 p-3 rounded-3 shadow-sm border">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="h1 mb-0 fw-bold text-warning">#@ticket.Number</span>
+                            <div class="text-end">
+                                <span class="badge bg-primary d-block mb-1">@ticket.ServiceType</span>
+                                <small class="text-muted">@ticket.IssueTime.ToString("HH:mm:ss")</small>
+                            </div>
+                        </div>
+                    </div>
                 }
             </div>
         </div>
     </div>
+
+    <div class="position-fixed bottom-0 start-0 w-100 bg-black p-2 border-top border-warning opacity-75">
+        <marquee class="text-warning h5 mb-0">
+            Система працює на основі патерна Observer: Табло автоматично оновлюється при зміні стану черги в QueueSystem.
+        </marquee>
+    </div>
 </div>
 
 @code {
-    private Ticket? calledTicket;
-    protected override void OnInitialized() => Queue.Attach(this);
-    public void Update(Ticket t) { calledTicket = t; InvokeAsync(StateHasChanged); }
-    public void Dispose() => Queue.Detach(this);
+    protected override void OnInitialized()
+    {
+        // Підписуємо Табло на оновлення від системи (UML Observer)
+        Queue.Attach(this);
+    }
+
+    // Метод інтерфейсу IQueueObserver
+    public void Update(Ticket ticket)
+    {
+        // Оновлюємо інтерфейс при зміні даних
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        // Відписуємося при закритті сторінки (щоб не було витоку пам'яті)
+        Queue.Detach(this);
+    }
 }
+
+<style>
+    .ls-wide { letter-spacing: 5px; }
+    .display-1 { font-family: 'Courier New', Courier, monospace; }
+</style>

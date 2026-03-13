@@ -2,18 +2,48 @@
 @using ElectronicQueue.Models
 @inject QueueSystem Queue
 
-<div class="container mt-4">
-    <h3>Кабінет оператора</h3>
-    <div class="card p-4 mt-3 shadow">
-        <button class="btn btn-success btn-lg" @onclick="Call">📢 Викликати наступного клієнта</button>
-        <div class="mt-4">
-            <h5>Зараз в обслуговуванні: @(current?.Number ?? 0)</h5>
-            <p>Всього в черзі: @Queue.GetAll().Count(x => x.Status == "В черзі")</p>
-        </div>
-    </div>
-</div>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-header bg-success text-white p-4 text-center rounded-top-4">
+                    <i class="bi bi-person-workspace display-4"></i>
+                    <h2 class="fw-bold mb-0">Кабінет оператора</h2>
+                </div>
+                <div class="card-body p-4 text-center">
+                    <div class="mb-4">
+                        <p class="text-muted mb-1">Зараз в обслуговуванні:</p>
+                        <div class="display-2 fw-bold text-success">
+                            #@(currentTicket?.Number ?? 0)
+                        </div>
+                        @if (currentTicket != null)
+                        {
+                            <span class="badge bg-info p-2 mt-2">@currentTicket.ServiceType</span>
+                        }
+                    </div>
 
-@code {
-    private Ticket? current;
-    private void Call() => current = Queue.CallNext();
-}
+                    <button class="btn btn-success btn-lg w-100 py-3 shadow-sm hover-zoom" 
+                            @onclick="CallNextClient">
+                        <i class="bi bi-megaphone-fill me-2"></i> Викликати наступного
+                    </button>
+                    
+                    <div class="mt-4 pt-3 border-top">
+                        <p class="small text-muted mb-0">Всього в черзі: <strong>@Queue.GetWaitingCount()</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 alert alert-light border shadow-sm rounded-4">
+                <h6 class="fw-bold"><i class="bi bi-diagram-3-fill me-2 text-primary"></i>Робота патернів:</h6>
+                <small class="text-muted d-block mb-1">• <strong>Strategy:</strong> При виклику першими обираються об'єкти з <code>IsPriority = true</code>.</small>
+                <small class="text-muted">• <strong>Singleton:</strong> Оператор працює з тим же списком, що й термінал.</small>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <div class="card shadow border-0 rounded-4 h-100">
+                <div class="card-header bg-dark text-white p-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Поточна черга</h5>
+                    <span class="badge bg-secondary">Очікують</span>
+                </div>
+                <div class="card-body p-0 overflow-auto" style="
