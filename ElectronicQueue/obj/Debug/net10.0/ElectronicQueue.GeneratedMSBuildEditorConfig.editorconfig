@@ -26,6 +26,10 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/andri/Documents/GitHub/Kyrsova_OOP/ElectronicQueue/Components/Pages/Board.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xCb2FyZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/andri/Documents/GitHub/Kyrsova_OOP/ElectronicQueue/Components/Pages/Counter.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDb3VudGVyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
@@ -42,16 +46,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xOb3RGb3VuZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/andri/Documents/GitHub/Kyrsova_OOP/ElectronicQueue/Components/Pages/OperatorScreen.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xPcGVyYXRvclNjcmVlbi5yYXpvcg==
+[C:/Users/andri/Documents/GitHub/Kyrsova_OOP/ElectronicQueue/Components/Pages/Operator.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xPcGVyYXRvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/andri/Documents/GitHub/Kyrsova_OOP/ElectronicQueue/Components/Pages/QueueBoard.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xRdWV1ZUJvYXJkLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/andri/Documents/GitHub/Kyrsova_OOP/ElectronicQueue/Components/Pages/TicketScreen.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xUaWNrZXRTY3JlZW4ucmF6b3I=
+[C:/Users/andri/Documents/GitHub/Kyrsova_OOP/ElectronicQueue/Components/Pages/Terminal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xUZXJtaW5hbC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/andri/Documents/GitHub/Kyrsova_OOP/ElectronicQueue/Components/Pages/Weather.razor]

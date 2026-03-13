@@ -1,5 +1,5 @@
 using ElectronicQueue.Components;
-using ElectronicQueue.Services; // ДОДАНО: Підключення папки з сервісами
+using ElectronicQueue.Models; // ЗМІНЕНО: Підключаємо нову папку Models, де тепер лежить наша ООП-логіка
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,8 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// ДОДАНО: Реєструємо наш "мозок" черги як Singleton (єдиний для всіх сторінок)
-builder.Services.AddSingleton<QueueService>();
+// ЗМІНЕНО: Реєструємо нашу нову систему черги (QueueSystem замість старого QueueService) 
+// як Singleton (один спільний об'єкт для всіх сторінок сайту)
+builder.Services.AddSingleton<QueueSystem>();
 
 var app = builder.Build();
 

@@ -83,3 +83,4 @@ C:\Users\andri\Documents\GitHub\Kyrsova_OOP\ElectronicQueue\obj\Debug\net10.0\re
 C:\Users\andri\Documents\GitHub\Kyrsova_OOP\ElectronicQueue\obj\Debug\net10.0\compressed\381pv8kgil-{0}-t59asijjhz-t59asijjhz.gz
 C:\Users\andri\Documents\GitHub\Kyrsova_OOP\ElectronicQueue\obj\Debug\net10.0\compressed\o7vlrgil3u-{0}-t59asijjhz-t59asijjhz.gz
 C:\Users\andri\Documents\GitHub\Kyrsova_OOP\ElectronicQueue\obj\Debug\net10.0\compressed\nxq9di4b9v-{0}-djt9pl020s-djt9pl020s.gz
+C:\Users\andri\Documents\GitHub\Kyrsova_OOP\ElectronicQueue\obj\Debug\net10.0\ElectronicQueue.sourcelink.json

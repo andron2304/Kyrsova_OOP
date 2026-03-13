@@ -1,0 +1,19 @@
+@page "/operator"
+@using ElectronicQueue.Models
+@inject QueueSystem Queue
+
+<div class="container mt-4">
+    <h3>Кабінет оператора</h3>
+    <div class="card p-4 mt-3 shadow">
+        <button class="btn btn-success btn-lg" @onclick="Call">📢 Викликати наступного клієнта</button>
+        <div class="mt-4">
+            <h5>Зараз в обслуговуванні: @(current?.Number ?? 0)</h5>
+            <p>Всього в черзі: @Queue.GetAll().Count(x => x.Status == "В черзі")</p>
+        </div>
+    </div>
+</div>
+
+@code {
+    private Ticket? current;
+    private void Call() => current = Queue.CallNext();
+}

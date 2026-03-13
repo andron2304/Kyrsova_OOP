@@ -1,0 +1,27 @@
+@page "/terminal"
+@using ElectronicQueue.Models
+@inject QueueSystem Queue
+
+<div class="container mt-5 text-center">
+    <div class="card p-5 shadow-lg border-primary">
+        <h1 class="display-4 text-primary fw-bold">SmartQueue Pro</h1>
+        <p class="lead">Оберіть послугу, щоб отримати талон</p>
+        <hr />
+        <div class="d-grid gap-3 col-8 mx-auto mt-4">
+            <button class="btn btn-primary btn-lg p-4" @onclick='() => Take("Загальна", false)'>Загальна черга</button>
+            <button class="btn btn-warning btn-lg p-4 fw-bold" @onclick='() => Take("Пільгова", true)'>Пільгова черга ♿</button>
+        </div>
+
+        @if (lastTicket != null) {
+            <div class="alert alert-success mt-5 animate__animated animate__fadeIn">
+                <h3>ВАШ НОМЕР: <span class="badge bg-success">@lastTicket.Number</span></h3>
+                <p>Час видачі: @lastTicket.IssueTime.ToShortTimeString()</p>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private Ticket? lastTicket;
+    private void Take(string s, bool p) => lastTicket = Queue.AddTicket(s, p);
+}

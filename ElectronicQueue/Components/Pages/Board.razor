@@ -1,0 +1,28 @@
+@page "/board"
+@using ElectronicQueue.Models
+@inject QueueSystem Queue
+@implements IQueueObserver
+@implements IDisposable
+
+<div class="container-fluid bg-dark text-white min-vh-100 p-5">
+    <h1 class="text-center mb-5 text-warning fw-bold display-3">ІНФОРМАЦІЙНЕ ТАБЛО</h1>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <div class="display-1 p-5 border border-warning rounded shadow">
+                @if (calledTicket != null) {
+                    <div class="animate__animated animate__flash">НОМЕР №@calledTicket.Number</div>
+                    <div class="h2 text-muted">Будь ласка, пройдіть до вікна</div>
+                } else {
+                    <div class="text-muted small">Очікуйте виклику...</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private Ticket? calledTicket;
+    protected override void OnInitialized() => Queue.Attach(this);
+    public void Update(Ticket t) { calledTicket = t; InvokeAsync(StateHasChanged); }
+    public void Dispose() => Queue.Detach(this);
+}
