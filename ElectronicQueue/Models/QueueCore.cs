@@ -18,18 +18,33 @@ public class QueueSystem {
     private List<IQueueObserver> _observers = new();
     private int _counter = 1;
 
+    // --- МЕТОДИ ДЛЯ ТЕРМІНАЛУ ТА ТАБЛО ---
+    
+    // Скільки людей чекають зараз
+    public int GetWaitingCount() => _tickets.Count(x => x.Status == "В черзі");
+
+    // Останній викликаний номер (що зараз на екрані)
+    public int? GetCurrentNumber() => _tickets.LastOrDefault(x => x.Status == "Викликано")?.Number;
+
+    // Історія останніх 5 викликаних
+    public List<Ticket> GetHistory() => _tickets.Where(x => x.Status == "Викликано").TakeLast(5).Reverse().ToList();
+
+    // --- ОСНОВНА ЛОГІКА ---
+
     // Видача талона
     public Ticket AddTicket(string service, bool priority) {
         var t = new Ticket { Number = _counter++, ServiceType = service, IsPriority = priority };
         _tickets.Add(t);
+        // Можна сповістити спостерігачів про новий талон, щоб термінал оновив лічильник
+        Notify(t); 
         return t;
     }
 
     // Виклик наступного (Strategy: Пільговики вперед)
     public Ticket? CallNext() {
         var t = _tickets.Where(x => x.Status == "В черзі")
-                       .OrderByDescending(x => x.IsPriority)
-                       .ThenBy(x => x.IssueTime).FirstOrDefault();
+                        .OrderByDescending(x => x.IsPriority)
+                        .ThenBy(x => x.IssueTime).FirstOrDefault();
         if (t != null) {
             t.Status = "Викликано";
             Notify(t);

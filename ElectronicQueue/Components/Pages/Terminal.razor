@@ -2,26 +2,107 @@
 @using ElectronicQueue.Models
 @inject QueueSystem Queue
 
-<div class="container mt-5 text-center">
-    <div class="card p-5 shadow-lg border-primary">
-        <h1 class="display-4 text-primary fw-bold">SmartQueue Pro</h1>
-        <p class="lead">Оберіть послугу, щоб отримати талон</p>
-        <hr />
-        <div class="d-grid gap-3 col-8 mx-auto mt-4">
-            <button class="btn btn-primary btn-lg p-4" @onclick='() => Take("Загальна", false)'>Загальна черга</button>
-            <button class="btn btn-warning btn-lg p-4 fw-bold" @onclick='() => Take("Пільгова", true)'>Пільгова черга ♿</button>
-        </div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="bg-primary p-4 text-white text-center">
+                    <i class="bi bi-person-plus-fill display-1"></i>
+                    <h1 class="fw-bold">SmartQueue Pro</h1>
+                    <p class="lead mb-0">Електронна система реєстрації клієнтів</p>
+                </div>
 
-        @if (lastTicket != null) {
-            <div class="alert alert-success mt-5 animate__animated animate__fadeIn">
-                <h3>ВАШ НОМЕР: <span class="badge bg-success">@lastTicket.Number</span></h3>
-                <p>Час видачі: @lastTicket.IssueTime.ToShortTimeString()</p>
+                <div class="card-body p-5">
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded shadow-sm border-top border-primary border-4 text-center">
+                                <small class="text-muted d-block">Всього в черзі</small>
+                                <span class="h4 fw-bold text-primary">@Queue.GetWaitingCount() осіб</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded shadow-sm border-top border-warning border-4 text-center">
+                                <small class="text-muted d-block">Зараз обслуговується</small>
+                                <span class="h4 fw-bold text-warning">#@(Queue.GetCurrentNumber() ?? 0)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mb-5">
+                        <h3 class="fw-bold text-dark">Оберіть тип обслуговування</h3>
+                        <p class="text-muted">Натисніть на відповідну кнопку, щоб отримати талон</p>
+                    </div>
+
+                    <div class="d-grid gap-4">
+                        <button class="btn btn-outline-primary btn-lg py-4 shadow-sm hover-zoom" 
+                                @onclick='() => TakeTicket("Загальна черга", false)'>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <i class="bi bi-people-fill fs-1 me-3"></i>
+                                <div class="text-start">
+                                    <div class="fw-bold">Загальна черга</div>
+                                    <small>Стандартне обслуговування за часом запису</small>
+                                </div>
+                            </div>
+                        </button>
+
+                        <button class="btn btn-outline-warning btn-lg py-4 shadow-sm hover-zoom" 
+                                @onclick='() => TakeTicket("Пільгова черга", true)'>
+                            <div class="d-flex align-items-center justify-content-center text-dark">
+                                <i class="bi bi-person-vcard-fill fs-1 me-3"></i>
+                                <div class="text-start">
+                                    <div class="fw-bold text-dark">Пільгова черга</div>
+                                    <small class="text-dark">Пріоритетне обслуговування (PriorityStrategy)</small>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+
+                    @if (lastTicket != null)
+                    {
+                        <div class="mt-5 p-4 bg-light border-start border-success border-5 rounded-3 animate__animated animate__fadeIn">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h4 class="text-success fw-bold mb-1">Талон видано успішно!</h4>
+                                    <p class="mb-0 text-muted small">Збережіть цей номер для перегляду на табло</p>
+                                </div>
+                                <div class="col-4 text-end">
+                                    <div class="display-4 fw-bold text-primary">#@lastTicket.Number</div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="card-footer bg-white p-4 border-top">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-info-circle-fill text-info fs-4 me-3"></i>
+                        <div>
+                            <p class="mb-1 fw-bold text-dark">Як це працює (за UML):</p>
+                            <small class="text-muted d-block">
+                                • <strong>Об'єкт Ticket:</strong> Створюється новий екземпляр з унікальним номером.<br>
+                                • <strong>Singleton:</strong> Дані зберігаються в єдиному екземплярі QueueSystem.<br>
+                                • <strong>PriorityStrategy:</strong> Пільгові талони автоматично підіймаються вгору черги.
+                            </small>
+                        </div>
+                    </div>
+                </div>
             </div>
-        }
+        </div>
     </div>
 </div>
 
 @code {
     private Ticket? lastTicket;
-    private void Take(string s, bool p) => lastTicket = Queue.AddTicket(s, p);
+
+    private void TakeTicket(string service, bool priority)
+    {
+        lastTicket = Queue.AddTicket(service, priority);
+        StateHasChanged();
+    }
 }
+
+<style>
+    .hover-zoom { transition: transform 0.2s; }
+    .hover-zoom:hover { transform: scale(1.02); }
+    .card { border-radius: 20px; }
+</style>
