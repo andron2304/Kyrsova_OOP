@@ -1,74 +1,178 @@
 @page "/board"
 @using ElectronicQueue.Models
+@inject QueueSystem Queue
 @implements IQueueObserver
 @implements IDisposable
-@inject QueueSystem Queue
 
-<div class="container-fluid bg-dark text-white min-vh-100 p-4">
-    <div class="row h-100">
-        <div class="col-md-8 d-flex flex-column justify-content-center align-items-center border-end border-secondary">
-            <h1 class="display-1 fw-bold text-warning mb-0 animate__animated animate__pulse animate__infinite">
-                ІНФОРМАЦІЙНЕ ТАБЛО
-            </h1>
-            <hr class="w-75 border-secondary my-5">
-            
-            <div class="text-center p-5 rounded-5 shadow-lg bg-black border border-warning" style="min-width: 400px;">
-                <p class="h2 text-uppercase ls-wide mb-3 text-muted">Зараз викликається:</p>
-                <div class="display-1 fw-bold text-warning" style="font-size: 10rem;">
-                    #@(Queue.GetCurrentNumber() ?? 0)
-                </div>
-            </div>
-            <p class="mt-4 h4 text-muted">Будь ласка, підійдіть до вікна обслуговування</p>
-        </div>
-
-        <div class="col-md-4 p-4">
-            <h3 class="text-warning mb-4 fw-bold text-center border-bottom pb-2">Історія викликів</h3>
-            <div class="list-group list-group-flush">
-                @foreach (var ticket in Queue.GetHistory())
-                {
-                    <div class="list-group-item bg-transparent text-white border-secondary mb-3 p-3 rounded-3 shadow-sm border">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="h1 mb-0 fw-bold text-warning">#@ticket.Number</span>
-                            <div class="text-end">
-                                <span class="badge bg-primary d-block mb-1">@ticket.ServiceType</span>
-                                <small class="text-muted">@ticket.IssueTime.ToString("HH:mm:ss")</small>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
+<div class="board-container d-flex flex-column rounded-4 shadow-lg overflow-hidden">
+    <div class="board-header bg-darker d-flex justify-content-between align-items-center px-5 py-3 border-bottom border-secondary border-opacity-50">
+        <h2 class="text-warning fw-bold mb-0 letter-spacing-wide">
+            <i class="bi bi-display me-2"></i> ІНФОРМАЦІЙНЕ ТАБЛО
+        </h2>
+        <div class="d-flex align-items-center text-white">
+            <span class="live-indicator me-3"></span>
+            <span class="fs-4 fw-light text-uppercase tracking-wider">Live</span>
         </div>
     </div>
 
-    <div class="position-fixed bottom-0 start-0 w-100 bg-black p-2 border-top border-warning opacity-75">
-        <marquee class="text-warning h5 mb-0">
-            Система працює на основі патерна Observer: Табло автоматично оновлюється при зміні стану черги в QueueSystem.
-        </marquee>
+    <div class="row g-0 flex-grow-1 bg-dark">
+        <div class="col-lg-7 d-flex flex-column justify-content-center align-items-center p-5 border-end border-secondary border-opacity-50 position-relative">
+            
+            @if (currentTicket != null)
+            {
+                <div class="text-center w-100 animate__animated animate__zoomIn">
+                    <h3 class="text-uppercase text-secondary fw-bold mb-4 tracking-wider">Будь ласка, підійдіть до оператора</h3>
+                    
+                    <div class="ticket-card bg-gradient-primary rounded-5 p-5 shadow-lg mb-5 mx-auto border border-4 border-white border-opacity-25" style="max-width: 600px;">
+                        <div class="display-1 fw-black text-white ticket-number drop-shadow">
+                            #@currentTicket.Number
+                        </div>
+                    </div>
+                    
+                    <h1 class="display-3 fw-bold text-white mb-2 text-truncate px-4">@currentTicket.ClientName</h1>
+                    
+                    @if (!string.IsNullOrEmpty(currentTicket.Comment))
+                    {
+                        <p class="fs-3 text-info mt-3"><i class="bi bi-chat-right-quote-fill me-2 opacity-75"></i> @currentTicket.Comment</p>
+                    }
+                    
+                    <div class="mt-4">
+                        <span class="badge @(currentTicket.IsPriority ? "bg-warning text-dark" : "bg-light text-dark") fs-4 rounded-pill px-4 py-2 shadow">
+                            @currentTicket.ServiceType
+                        </span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="text-center opacity-25">
+                    <i class="bi bi-broadcast display-1 text-white mb-4 d-block" style="font-size: 8rem;"></i>
+                    <h1 class="text-white fw-light">Очікування виклику...</h1>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-5 p-0 d-flex flex-column h-100 bg-darker">
+            <div class="p-4 bg-darker sticky-top z-1 border-bottom border-secondary border-opacity-50">
+                <h3 class="text-uppercase text-white fw-bold mb-0 text-center tracking-wider">
+                    <i class="bi bi-clock-history text-secondary me-2"></i>Історія викликів
+                </h3>
+            </div>
+            
+            <div class="p-4 flex-grow-1 overflow-auto custom-scrollbar">
+                <div class="d-flex flex-column gap-3">
+                    @{
+                        // Беремо історію, але відкидаємо той квиток, що зараз великим на екрані
+                        var history = Queue.GetHistory().Where(t => t.Number != currentTicket?.Number).Take(5).ToList();
+                        
+                        if (history.Any())
+                        {
+                            foreach(var ticket in history)
+                            {
+                                <div class="card bg-secondary bg-opacity-10 border-start border-4 @(ticket.IsPriority ? "border-warning" : "border-info") rounded-4 animate__animated animate__fadeInRight">
+                                    <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h2 class="text-white fw-bold mb-1">#@ticket.Number</h2>
+                                            <div class="text-white opacity-75 fs-4">@ticket.ClientName</div>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="badge @(ticket.IsPriority ? "bg-warning text-dark" : "bg-primary") fs-6 rounded-pill px-3 py-2">
+                                                @ticket.ServiceType
+                                            </span>
+                                            <div class="text-secondary small mt-2">@ticket.IssueTime.ToString("HH:mm")</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="text-center text-secondary py-5 mt-5">
+                                <i class="bi bi-list-nested display-1 opacity-25 mb-3 d-block"></i>
+                                <h4 class="fw-light">Історія поки порожня</h4>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 @code {
+    private Ticket? currentTicket;
+
     protected override void OnInitialized()
     {
-        // Підписуємо Табло на оновлення від системи (UML Observer)
         Queue.Attach(this);
+        UpdateCurrentTicket();
     }
 
-    // Метод інтерфейсу IQueueObserver
     public void Update(Ticket ticket)
     {
-        // Оновлюємо інтерфейс при зміні даних
+        UpdateCurrentTicket();
         InvokeAsync(StateHasChanged);
+    }
+    
+    private void UpdateCurrentTicket()
+    {
+        // Знаходимо останній квиток зі статусом "Викликано"
+        currentTicket = Queue.GetAll().LastOrDefault(t => t.Status == "Викликано");
     }
 
     public void Dispose()
     {
-        // Відписуємося при закритті сторінки (щоб не було витоку пам'яті)
         Queue.Detach(this);
     }
 }
 
 <style>
-    .ls-wide { letter-spacing: 5px; }
-    .display-1 { font-family: 'Courier New', Courier, monospace; }
+    /* Темна тема для табло */
+    .bg-darker { background-color: #121212 !important; }
+    .board-container { min-height: 80vh; background-color: #1a1d20; }
+    
+    /* Типографіка */
+    .fw-black { font-weight: 900; }
+    .tracking-wider { letter-spacing: 0.15em; }
+    .letter-spacing-wide { letter-spacing: 2px; }
+    .drop-shadow { text-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+    
+    /* Картка поточного номера */
+    .bg-gradient-primary { 
+        background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+        box-shadow: 0 0 40px rgba(13, 110, 253, 0.4);
+    }
+    .ticket-number { font-size: 9rem; line-height: 1; }
+    .ticket-card {
+        animation: pulse-glow 2s infinite;
+    }
+
+    /* Індикатор Live */
+    .live-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        background-color: #dc3545;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #dc3545;
+        animation: blink 1.5s infinite;
+    }
+
+    /* Анімації */
+    @@keyframes pulse-glow {
+        0% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4); }
+        70% { box-shadow: 0 0 0 25px rgba(13, 110, 253, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0); }
+    }
+    @@keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0.3; }
+        100% { opacity: 1; }
+    }
+
+    /* Кастомний скролбар для історії */
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #495057; border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #6c757d; }
 </style>

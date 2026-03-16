@@ -1,0 +1,7 @@
+C:\Users\andri\Documents\GitHub\Kyrsova_OOP\ElectronicQueue\bin\Release\net10.0\publish\ElectronicQueue.exe
+C:\Users\andri\Documents\GitHub\Kyrsova_OOP\ElectronicQueue\bin\Release\net10.0\publish\appsettings.Development.json
+C:\Users\andri\Documents\GitHub\Kyrsova_OOP\ElectronicQueue\bin\Release\net10.0\publish\appsettings.json
+C:\Users\andri\Documents\GitHub\Kyrsova_OOP\ElectronicQueue\bin\Release\net10.0\publish\ElectronicQueue.dll
+C:\Users\andri\Documents\GitHub\Kyrsova_OOP\ElectronicQueue\bin\Release\net10.0\publish\ElectronicQueue.runtimeconfig.json
+C:\Users\andri\Documents\GitHub\Kyrsova_OOP\ElectronicQueue\bin\Release\net10.0\publish\ElectronicQueue.pdb
+C:\Users\andri\Documents\GitHub\Kyrsova_OOP\ElectronicQueue\bin\Release\net10.0\publish\ElectronicQueue.deps.json
